@@ -104,9 +104,6 @@ function createAddQuoteForm() {
   
   // Add the entire form to the container
   formContainer.appendChild(formSection);
-  
-  // Create export/import section
-  createImportExportButtons();
 }
 
 // ============================================
@@ -203,49 +200,7 @@ function importFromJsonFile(event) {
 }
 
 // ============================================
-// STEP 7: Create Import/Export Buttons
-// ============================================
-
-function createImportExportButtons() {
-  const formContainer = document.getElementById('formContainer');
-  
-  // Create export/import section
-  const exportImportSection = document.createElement('div');
-  exportImportSection.className = 'form-section';
-  
-  const heading = document.createElement('h2');
-  heading.textContent = 'Manage Quotes';
-  exportImportSection.appendChild(heading);
-  
-  // Export button
-  const exportButton = document.createElement('button');
-  exportButton.textContent = 'Export Quotes as JSON';
-  exportButton.onclick = exportToJsonFile;
-  exportImportSection.appendChild(exportButton);
-  
-  // Import file input
-  const importDiv = document.createElement('div');
-  importDiv.style.marginTop = '10px';
-  
-  const importLabel = document.createElement('label');
-  importLabel.textContent = 'Import Quotes: ';
-  importLabel.style.marginRight = '10px';
-  
-  const importInput = document.createElement('input');
-  importInput.type = 'file';
-  importInput.id = 'importFile';
-  importInput.accept = '.json';
-  importInput.onchange = importFromJsonFile;
-  
-  importDiv.appendChild(importLabel);
-  importDiv.appendChild(importInput);
-  exportImportSection.appendChild(importDiv);
-  
-  formContainer.appendChild(exportImportSection);
-}
-
-// ============================================
-// STEP 8: Display Last Viewed Quote (Session Storage)
+// STEP 7: Display Last Viewed Quote (Session Storage)
 // ============================================
 
 function showLastViewedQuote() {
@@ -278,7 +233,7 @@ function showLastViewedQuote() {
 }
 
 // ============================================
-// STEP 9: Set up event listeners when page loads
+// STEP 8: Set up event listeners when page loads
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -297,32 +252,35 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// EXPLANATION OF NEW FEATURES:
+// EXPLANATION OF FEATURES:
 // ============================================
 
 /*
 1. LOCAL STORAGE:
-   - Persists data even after closing the browser
-   - Used to save the entire quotes array
-   - Data is stored as JSON string
+   - localStorage.setItem() saves data
+   - localStorage.getItem() retrieves data
+   - JSON.stringify() converts objects to strings
+   - JSON.parse() converts strings back to objects
+   - Data persists even after browser closes
 
 2. SESSION STORAGE:
-   - Data only lasts for the current session (tab)
-   - Used to remember the last viewed quote
-   - Cleared when tab/browser is closed
+   - sessionStorage.setItem() saves data for current session
+   - Data cleared when tab/window closes
+   - Used for temporary data like last viewed quote
 
 3. JSON EXPORT:
-   - Converts quotes array to JSON string
-   - Creates a downloadable file using Blob
-   - Uses URL.createObjectURL for download link
+   - Blob creates a file from data
+   - URL.createObjectURL() creates a download URL
+   - User downloads quotes as .json file
 
 4. JSON IMPORT:
-   - Uses FileReader to read uploaded JSON files
-   - Validates the data before importing
-   - Merges imported quotes with existing ones
+   - FileReader reads uploaded files
+   - JSON.parse() converts file content to JavaScript
+   - Validates data before importing
+   - Merges with existing quotes
 
-5. DATA PERSISTENCE:
-   - saveQuotes() called after any modification
-   - loadQuotes() called on page load
-   - Ensures data is never lost
+5. DOM MANIPULATION:
+   - createElement() creates new HTML elements
+   - appendChild() adds elements to the page
+   - All done without page reload
 */

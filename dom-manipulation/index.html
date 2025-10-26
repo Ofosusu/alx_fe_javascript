@@ -113,6 +113,16 @@
   <!-- This section will be populated by JavaScript -->
   <div id="formContainer"></div>
   
+  <!-- Export and Import Section -->
+  <div class="form-section">
+    <h2>Manage Quotes</h2>
+    <button id="exportQuotes" onclick="exportToJsonFile()">Export Quotes</button>
+    <div style="margin-top: 10px;">
+      <label for="importFile">Import Quotes: </label>
+      <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    </div>
+  </div>
+  
   <!-- Link to our JavaScript file -->
   <script src="script.js"></script>
 </body>
