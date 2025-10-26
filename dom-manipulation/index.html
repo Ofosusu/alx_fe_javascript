@@ -60,6 +60,17 @@
     button:hover {
       background-color: #0056b3;
     }
+
+    /* Style for the new filter dropdown */
+    select {
+      padding: 11px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      background-color: white;
+      min-width: 200px;
+    }
     
     input[type="text"] {
       padding: 10px;
@@ -100,20 +111,20 @@
 <body>
   <h1>Dynamic Quote Generator</h1>
   
-  <!-- This div will display our quotes -->
   <div id="quoteDisplay">
     <p>Click the button below to see a quote!</p>
   </div>
   
-  <!-- Button to show new random quote -->
   <div class="button-container">
+    <select id="categoryFilter" onchange="filterQuotes()">
+      <option value="all">All Categories</option>
+      </select>
+    
     <button id="newQuote">Show New Quote</button>
   </div>
   
-  <!-- This section will be populated by JavaScript -->
   <div id="formContainer"></div>
   
-  <!-- Export and Import Section -->
   <div class="form-section">
     <h2>Manage Quotes</h2>
     <button id="exportQuotes" onclick="exportToJsonFile()">Export Quotes</button>
@@ -123,7 +134,6 @@
     </div>
   </div>
   
-  <!-- Link to our JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>
