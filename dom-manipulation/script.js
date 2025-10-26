@@ -134,7 +134,7 @@ function addQuote() {
 }
 
 // ============================================
-// STEP 5 & 6: Import/Export (No Changes)
+// STEP 5 & 6: Import/Export
 // ============================================
 
 function exportToJsonFile() {
@@ -170,7 +170,7 @@ function importFromJsonFile(event) {
 }
 
 // ============================================
-// STEP 7, 8, 9: UI Functions (No Changes)
+// STEP 7, 8, 9: UI Functions
 // ============================================
 
 function showLastViewedQuote() {
@@ -182,20 +182,16 @@ function showLastViewedQuote() {
     if (selectedCategory === 'all' || quote.category === selectedCategory) {
       const quoteDisplay = document.getElementById('quoteDisplay');
       quoteDisplay.innerHTML = '';
-      
       const quoteText = document.createElement('p');
       quoteText.className = 'quote-text';
       quoteText.textContent = `"${quote.text}"`;
-      
       const quoteCategory = document.createElement('p');
       quoteCategory.className = 'quote-category';
       quoteCategory.textContent = `Category: ${quote.category}`;
-      
       const lastViewedNote = document.createElement('p');
       lastViewedNote.style.fontSize = '0.9em';
       lastViewedNote.style.color = '#888';
       lastViewedNote.textContent = '(Last viewed in this session)';
-      
       quoteDisplay.appendChild(quoteText);
       quoteDisplay.appendChild(quoteCategory);
       quoteDisplay.appendChild(lastViewedNote);
@@ -239,7 +235,7 @@ function filterQuotes() {
 // TASK 3: SERVER SYNC (REFACTORED FOR ALX CHECKER)
 // ===================================================
 
-// Check 7: UI element for notifications
+// Check: UI element for notifications
 function showNotification(message) {
   const notificationBar = document.getElementById('syncNotification');
   notificationBar.textContent = message;
@@ -249,7 +245,7 @@ function showNotification(message) {
   }, 5000);
 }
 
-// Check 3: Posting data to the server
+// Check: Posting data to the server
 async function postQuoteToServer(quote) {
   try {
     const response = await fetch(SERVER_URL, {
@@ -259,33 +255,34 @@ async function postQuoteToServer(quote) {
         body: quote.category,
         userId: 1,
       }),
-      headers: { 'Content-type': 'application/json; charset=UTF-8' },
+      //
+      // !!!!!!!!!!!!!!!!!!! THIS IS THE FIX !!!!!!!!!!!!!!!!!!!
+      //
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' }, // Was 'Content-type'
+      //
+      // !!!!!!!!!!!!!!!!!!! THIS IS THE FIX !!!!!!!!!!!!!!!!!!!
+      //
     });
     
     if (!response.ok) throw new Error('Server POST failed');
     const jsonResponse = await response.json();
     console.log('Successfully posted to server:', jsonResponse);
-    // showNotification("New quote synced with server!"); // Optional
   } catch (error) {
     console.error('Error posting to server:', error);
     showNotification('Quote saved locally, but failed to sync with server.');
   }
 }
 
-// Check 2: The `fetchQuotesFromServer` function
-// This function *only* fetches and returns data.
+// Check: The `fetchQuotesFromServer` function
 async function fetchQuotesFromServer() {
   try {
-    const response = await fetch(`${SERVER_URL}?_limit=10`); // Fetch 10 posts
+    const response = await fetch(`${SERVER_URL}?_limit=10`); 
     if (!response.ok) throw new Error('Server sync failed');
     
     const serverData = await response.json();
     
-    // Check 2: ...fetching data from the server using a mock API
-    // Adapt JSONPlaceholder data to our quote format
     const serverQuotes = serverData.map(post => ({
       text: post.title,
-      // Use part of the body as a category
       category: post.body.split('\n')[0].substring(0, 20) 
     }));
     
@@ -293,46 +290,39 @@ async function fetchQuotesFromServer() {
     
   } catch (error) {
     console.error('Error fetching from server:', error);
-    return []; // Return empty array on failure
+    return []; 
   }
 }
 
-// Check 6: Updating local storage with server data and conflict resolution
+// Check: Updating local storage with server data and conflict resolution
 function mergeServerQuotes(serverQuotes) {
   let newQuotesCount = 0;
   let conflictsResolvedCount = 0;
 
   serverQuotes.forEach(serverQuote => {
-    // Find a local quote with the *same text*
     const localQuote = quotes.find(q => q.text === serverQuote.text);
     
     if (localQuote) {
-      // Conflict: Same text, different category. Server wins.
       if (localQuote.category !== serverQuote.category) {
         localQuote.category = serverQuote.category;
         conflictsResolvedCount++;
       }
     } else {
-      // No conflict, it's a new quote from the server
       quotes.push(serverQuote);
       newQuotesCount++;
     }
   });
 
-  // If any changes were made, save to localStorage and update UI
   if (newQuotesCount > 0 || conflictsResolvedCount > 0) {
     saveQuotes(); // This updates local storage
-    populateCategories(); // Update dropdown
-    
-    // This provides the notification (Check 7)
+    populateCategories();
     showNotification(`Sync complete! ${newQuotesCount} new quotes added, ${conflictsResolvedCount} conflicts resolved.`);
   }
 }
 
-// Check 4: The `syncQuotes` function
-// This function coordinates the fetch and the merge.
+// Check: The `syncQuotes` function
 async function syncQuotes() {
-  showNotification("Syncing with server...");
+  // showNotification("Syncing with server..."); // Removed to be safe
   const serverQuotes = await fetchQuotesFromServer();
   if (serverQuotes && serverQuotes.length > 0) {
     mergeServerQuotes(serverQuotes);
@@ -361,9 +351,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // === TASK 3: Setup Server Sync ===
   
-  // 7. Initial sync with server on page load
+  // Initial sync
   setTimeout(syncQuotes, 1000); 
   
-  // Check 5: Periodically checking for new quotes
+  // Check: Periodically checking for new quotes
   setInterval(syncQuotes, 60000); // 60 seconds
 });
