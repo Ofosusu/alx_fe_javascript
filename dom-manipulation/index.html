@@ -24,6 +24,23 @@
       font-size: 1.3em;
       margin-bottom: 15px;
     }
+
+    /* STEP 3: Add UI element for notifications
+      This new style is for the sync notification bar.
+    */
+    .notification {
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      background-color: #d1ecf1; /* Light blue */
+      border-color: #bee5eb;
+      color: #0c5460;
+      text-align: center;
+      font-weight: bold;
+      /* Starts hidden */
+      display: none; 
+    }
     
     #quoteDisplay {
       background-color: white;
@@ -61,7 +78,6 @@
       background-color: #0056b3;
     }
 
-    /* Style for the new filter dropdown */
     select {
       padding: 11px;
       margin: 5px;
@@ -110,6 +126,8 @@
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
+  
+  <div id="syncNotification" class="notification"></div>
   
   <div id="quoteDisplay">
     <p>Click the button below to see a quote!</p>
